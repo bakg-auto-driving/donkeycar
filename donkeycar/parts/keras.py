@@ -108,3 +108,17 @@ def default_linear():
                   loss_weights={'angle_out': 0.5, 'throttle_out': .5})
 
     return model
+
+class KerasCategorical(KerasPilot):
+    def __init__(self, model=None, *args, **kwargs):
+        super(KerasCategorical, self).__init__(*args, **kwargs)
+        if model:
+            self.model = model
+        else:
+            self.model = default_categorical()
+
+    def run(self, img_arr):
+        img_arr = img_arr.reshape((1,) + img_arr.shape)
+        angle_binned, throttle = self.model.predict(img_arr)
+        angle_unbinned = util.data.linear_unbin(angle_binned[0])
+        return angle_unbinned, throttle[0][0]
