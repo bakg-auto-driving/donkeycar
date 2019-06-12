@@ -27,6 +27,20 @@ from donkeycar.parts.datastore import TubGroup, TubWriter
 from donkeycar.parts.keras import KerasCategorical
 from donkeycar.parts.transform import Lambda
 
+class Sombrero:
+
+    def __init__(self):
+        import RPi.GPIO as GPIO
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(26, GPIO.OUT)
+        GPIO.output(26, GPIO.LOW)
+        print("sombrero enabled")
+
+    def __del__(self):
+        import RPi.GPIO as GPIO
+        GPIO.cleanup()
+        print("sombrero disabled")
 
 def drive(cfg, model_path=None, use_chaos=False):
     """
@@ -38,7 +52,7 @@ def drive(cfg, model_path=None, use_chaos=False):
     Parts may have named outputs and inputs. The framework handles passing named outputs
     to parts requesting the same named input.
     """
-
+    s = Sombrero()
     V = dk.vehicle.Vehicle()
 
     clock = Timestamp()
